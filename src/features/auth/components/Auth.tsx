@@ -1,5 +1,4 @@
 "use client";
-import { AppWindowIcon, CodeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,31 +14,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerInputDto, registerSchema } from "../schemas/authSchema";
 import { useForm } from "react-hook-form";
-import { useRegisterUserMutation } from "../api/authApi";
 
-export function Auth() {
-  const [registerUser, { isLoading, isError, isSuccess }] =
-    useRegisterUserMutation();
+type Props = {
+  onSubmit: (data: registerInputDto,reset :()=>void) => void;
+  isLoading: boolean;
+};
 
+export function Auth({ onSubmit=()=>{}, isLoading }: Props) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
+    reset,
   } = useForm<registerInputDto>({
     resolver: zodResolver(registerSchema),
   });
 
-  const handleRegisterSubmit = (data: registerInputDto) => {
-    try {
-      const result = registerUser(data);
-      console.log(result);
-      if (isSuccess) {
-        console.log("User registered successfully");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4">
       <div className="w-full max-w-md">
@@ -70,11 +61,15 @@ export function Auth() {
                   Sign up to get started with your account.
                 </CardDescription>
               </CardHeader>
-              <form onSubmit={handleSubmit(handleRegisterSubmit)}>
+              <form onSubmit={handleSubmit((data) => onSubmit(data,reset))}>
                 <CardContent className="grid gap-6">
                   <div className="grid gap-2">
                     <Label htmlFor="tabs-demo-username">Username</Label>
-                    <Input placeholder="@peduarte" {...register("name")} />
+                    <Input
+                      placeholder="@peduarte"
+                      required
+                      {...register("name")}
+                    />
                     {errors.name && (
                       <p className="text-sm text-red-500">
                         {errors.name.message}
@@ -86,6 +81,7 @@ export function Auth() {
                     <Input
                       {...register("email")}
                       placeholder="PedroDuarte@gmail.com"
+                      required
                     />
                     {errors.email && (
                       <p className="text-sm text-red-500">
@@ -99,6 +95,7 @@ export function Auth() {
                       {...register("password")}
                       type="password"
                       placeholder="******"
+                      required
                     />
                     {errors.password && (
                       <p className="text-sm text-red-500">
@@ -110,10 +107,32 @@ export function Auth() {
                 <CardFooter>
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-xl"
+                    disabled={isLoading}
+                    className="w-full rounded-xl flex items-center justify-center gap-2"
                   >
-                    {isLoading ? "Registering ..." : "Register"}
+                    {isLoading && (
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
+                      </svg>
+                    )}
+                    {isLoading ? "Registering..." : "Register"}
                   </Button>
                 </CardFooter>
               </form>
@@ -136,6 +155,7 @@ export function Auth() {
                     id="tabs-demo-current"
                     type="email"
                     placeholder="your@email.com"
+                    required
                   />
                 </div>
                 <div className="grid gap-2">
@@ -152,6 +172,7 @@ export function Auth() {
               </CardFooter>
             </Card>
           </TabsContent>
+          
         </Tabs>
       </div>
     </div>
