@@ -1,13 +1,33 @@
 "use client";
-import { useRegisterUserMutation } from "../api/authApi";
-import { registerInputDto } from "../schemas/authSchema";
+import { useEffect } from "react";
+import { useGetCurrentUserQuery } from "../api/authApi";
+import { useLogin } from "./useLogin";
 
-export const useRegister=()=>{
-    const [registerUser,{isLoading}]=useRegisterUserMutation();
+export const useAuth = () => {
+  const { data: userData, isLoading: isUserLoading, error: userError, refetch } = useGetCurrentUserQuery();
+  const { logoutHandler } = useLogin();
 
-    const registerHandler=async(data:registerInputDto)=>{
-        return await registerUser(data).unwrap();
-    };
+  useEffect(() => {
+    // Check if user is authenticated on app load
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      refetch();
+    }
+  }, [refetch]);
 
-    return {registerHandler,isLoading};
-}
+  const isAuthenticated = !!userData?.user;
+  const user = userData?.user;
+
+  const logout = async () => {
+    await logoutHandler();
+  };
+
+  return {
+    user,
+    isAuthenticated,
+    isLoading: isUserLoading,
+    error: userError,
+    logout,
+    refetch,
+  };
+};

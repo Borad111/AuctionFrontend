@@ -1,27 +1,49 @@
 "use client";
-import React from "react";
-import { useRegister } from "../hooks/useAuth";
-import { toast } from "sonner";
-import { Auth } from "../components/Auth";
-import { registerInputDto } from "../schemas/authSchema";
+import React, { useState } from "react";
+// import { LoginForm } from "./LoginForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LoginForm } from "../components/LoginForm";
+import { RegisterForm } from "../components/RegisterForm";
 
-function AuthContainer() {
-  const { registerHandler, isLoading } = useRegister();
-  const handleRegisterSubmit = async (
-    data: registerInputDto,
-    reset: () => void
-  ) => {
-    try {
-      const result = await registerHandler(data);
-      toast.success(result.message || "Registration successful");
-      reset();
-      console.log(result);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Registration failed");
-      console.log(error);
-    }
+export function AuthContainer() {
+  const [activeTab, setActiveTab] = useState("login");
+
+  const handleSwitchToRegister = () => setActiveTab("register");
+  const handleSwitchToLogin = () => setActiveTab("login");
+
+  const handleAuthSuccess = () => {
+    // Redirect or update UI after successful auth
+    console.log("Authentication successful!");
   };
-  return <Auth onSubmit={handleRegisterSubmit} isLoading={isLoading} />;
-}
 
-export default AuthContainer;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="w-full max-w-md">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 rounded-xl bg-white shadow-md">
+            <TabsTrigger value="login" className="rounded-xl data-[state=active]:bg-gray-100">
+              Login
+            </TabsTrigger>
+            <TabsTrigger value="register" className="rounded-xl data-[state=active]:bg-gray-100">
+              Register
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="login">
+            <LoginForm 
+              onSwitchToRegister={handleSwitchToRegister}
+              onLoginSuccess={handleAuthSuccess}
+            />
+          </TabsContent>
+
+          <TabsContent value="register">
+            <RegisterForm
+              onSwitchToLogin={handleSwitchToLogin}
+              onRegisterSuccess={handleAuthSuccess}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}

@@ -1,10 +1,3 @@
-// Request ke liye
-export interface registerRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export interface User {
   id: string;
   name: string;
@@ -12,9 +5,33 @@ export interface User {
   role: string;
   createdAt: string;
 }
-// Response ke liye
-export interface registerResponse {
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  role?: string;
+}
+
+export interface RegisterResponse {
   success: boolean;
   message: string;
+  user: User;
+}
+
+export interface LoginRequest {
+  idToken: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
+}
+
+export interface UserResponse {
+  success: boolean;
   user: User;
 }
