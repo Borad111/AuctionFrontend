@@ -7,4 +7,5 @@ export const config={
        authApi:`${env.BACKEND_URL}/auth`
     },
     sentry_Dsn:env.SENTRY_DSN,
+    storage_key:env.STORAGE_KEY
 }

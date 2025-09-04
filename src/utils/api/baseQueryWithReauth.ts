@@ -1,21 +1,25 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
 import { config } from "@/config";
-
-const getAccessToken = () =>
-  typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
-const setAccessToken = (token: string | null) => {
-  if (typeof window !== "undefined") {
-    if (token) localStorage.setItem("accessToken", token);
-    else localStorage.removeItem("accessToken");
-  }
-};
+import { RootState } from "@/store/store";
+import { logoutRequested, setAccessToken } from "@/store/slices/authSlice";
+import { routes } from "@/constants/routes";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: config.api.baseUrl,
-  prepareHeaders: (headers) => {
-    const token = getAccessToken();
-    if (token) headers.set("Authorization", `Bearer ${token}`);
+  credentials: "include",
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.accessToken;
+    
+    // Manually check if token exists
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+      console.log('📤 Sending request with token:', token.substring(0, 20) + '...');
+    } else {
+      console.log('⚠️ No access token available for request');
+    }
+    
     headers.set("Content-Type", "application/json");
     return headers;
   },
@@ -29,27 +33,28 @@ export const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401) {
-    // attempt refresh
+    console.warn("⏳ Access token expired, trying refresh...");
+
     const refreshResult = await baseQuery(
-      { url: "/auth/refresh", method: "POST" },
+      { url: "/auth/refresh-token", method: "POST" },
       api,
       extraOptions
     );
 
     if (refreshResult?.data) {
-      // assume server returns { accessToken }
-      // @ts-ignore
       const newAccessToken = (refreshResult.data as any).accessToken;
       if (newAccessToken) {
-        setAccessToken(newAccessToken);
-        // retry original query
+        api.dispatch(setAccessToken(newAccessToken));
+        // retry original request
         result = await baseQuery(args, api, extraOptions);
       }
     } else {
-      // refresh failed — logout flow
-      setAccessToken(null);
-      // optionally dispatch logout action
-      api.dispatch({ type: "auth/logoutRequested" });
+      api.dispatch(logoutRequested());
+      if (typeof window !== "undefined") {
+        window.location.href = routes.login;
+      }
+
+      toast.error("Session expired. Please login again.");
     }
   }
 

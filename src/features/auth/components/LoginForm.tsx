@@ -11,10 +11,10 @@ import { useLogin } from "../hooks/useLogin";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
-  onLoginSuccess?: () => void;
+  // onLoginSuccess?: () => void;
 }
 
-export function LoginForm({ onSwitchToRegister, onLoginSuccess }: LoginFormProps) {
+export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const { loginHandler, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,7 +31,7 @@ export function LoginForm({ onSwitchToRegister, onLoginSuccess }: LoginFormProps
     try {
       await loginHandler(data.email, data.password);
       reset();
-      onLoginSuccess?.();
+      // onLoginSuccess?.();
     } catch (error) {
       // Error is already handled in the hook
     }
