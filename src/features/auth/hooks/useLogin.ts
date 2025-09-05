@@ -27,7 +27,7 @@ export const useLogin = () => {
       setAuth(response.accessToken, response.user);
 
       toast.success("Login successful!");
-      router.push(routes.aboutUs);
+      router.replace(routes.aboutUs);
 
       return response;
     } catch (error) {

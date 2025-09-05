@@ -1,18 +1,28 @@
 "use client";
 import { useDispatch } from "react-redux";
-import { setAuth, logoutRequested } from "@/store/slices/authSlice";
-import { UserResponse } from "../types";
+import {
+  setAuth,
+  logoutRequested,
+  setAccessToken,
+} from "@/store/slices/authSlice";
+import { User } from "../types";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
 
-  const setAuthData = (accessToken: string, user: UserResponse) => {
+  const setAuthData = (accessToken: string, user: User) => {
     dispatch(setAuth({ accessToken, user }));
+  };
+
+  const updateAccessToken = (accessToken: string) => {
+    dispatch(setAccessToken(accessToken));
   };
 
   const logout = () => {
     dispatch(logoutRequested());
   };
 
-  return { setAuth: setAuthData, logout };
-};
+  return { setAuth: setAuthData,
+            logout,
+            setAccessToken:updateAccessToken };
+  };

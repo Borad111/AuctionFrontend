@@ -6,13 +6,21 @@ export interface User {
   createdAt: string;
 }
 
-export interface RegisterRequest {
+
+export interface RegisterInput {
   name: string;
   email: string;
   password: string;
-  role?: string;
+  role?: "ADMIN" | "BIDDER" | "SELLER" | "USER";
 }
 
+// 👇 Ye backend ke liye hai (without password, with uid)
+export interface RegisterRequest {
+  id: string;
+  name: string;
+  email: string;
+  role?: "ADMIN" | "BIDDER" | "SELLER" | "USER";
+}
 export interface RegisterResponse {
   success: boolean;
   message: string;
@@ -28,10 +36,10 @@ export interface LoginResponse {
   message: string;
   user: User;
   accessToken: string;
-  refreshToken?: string;
 }
 
-export interface UserResponse {
-  success: boolean;
-  user: User;
+
+export interface UserResponse{
+  success:boolean,
+  user:User  
 }

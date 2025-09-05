@@ -4,7 +4,7 @@ import { env } from "./env";
 export const config={
     api:{
         baseUrl:env.BACKEND_URL,
-       authApi:`${env.BACKEND_URL}/auth`
+        auth:"/auth"
     },
     sentry_Dsn:env.SENTRY_DSN,
     storage_key:env.STORAGE_KEY

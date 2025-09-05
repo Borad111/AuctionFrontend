@@ -1,50 +1,51 @@
 import { toast } from "sonner";
 import { AppError, AuthenticationError, ValidationError } from "./errors";
 
-// ✅ Extract error message
+// ✅ Map Firebase error codes to user-friendly messages
+const firebaseErrorMessages: Record<string, string> = {
+  "auth/email-already-in-use": "This email is already registered. Please login instead.",
+  "auth/invalid-email": "Invalid email format. Please enter a valid email.",
+  "auth/weak-password": "Password is too weak. Please use at least 6 characters.",
+  "auth/invalid-credential": "Invalid email or password.",
+  "auth/user-not-found": "No account found with this email.",
+  "auth/user-disabled": "This account has been disabled.",
+  "auth/too-many-requests": "Too many attempts. Please try again later.",
+};
+
 export const getErrorMessage = (error: unknown): string => {
+  if (typeof error === "object" && error && "code" in error) {
+    const code = (error as any).code;
+    if (firebaseErrorMessages[code]) return firebaseErrorMessages[code];
+  }
+
   if (error instanceof AppError) return error.message;
   if (error instanceof Error) return error.message;
   if (typeof error === "string") return error;
   return "An unknown error occurred";
 };
 
-// ✅ Extract error code
 export const getErrorCode = (error: unknown): string => {
   if (error instanceof AppError) return error.code;
+  if (typeof error === "object" && error && "code" in error) {
+    return (error as any).code;
+  }
   return "UNKNOWN_ERROR";
 };
 
-// ✅ Centralized handler for UI (Toast + Throw)
 export const handleError = (error: any): never => {
   const errorMessage = getErrorMessage(error);
 
-  // Firebase specific errors
-  switch (error?.code) {
-    case "auth/invalid-credential":
-      toast.error("Invalid credentials provided");
-      throw new AuthenticationError("Invalid credentials provided");
+  // ✅ Show friendly toast
+  toast.error(errorMessage);
 
-    case "auth/too-many-requests":
-      toast.error("Too many login attempts. Please try again later.");
-      throw new AuthenticationError("Too many login attempts. Please try again later.");
-
-    case "auth/user-not-found":
-      toast.error("No user found with this email.");
-      throw new AuthenticationError("No user found with this email.");
-
-    case "auth/user-disabled":
-      toast.error("This user account has been disabled.");
-      throw new AuthenticationError("This user account has been disabled.");
+  // ✅ Throw typed error for app-level handling
+  if (error?.code?.startsWith("auth/")) {
+    throw new AuthenticationError(errorMessage);
   }
 
-  // Backend Validation errors (custom example)
   if (error instanceof ValidationError) {
-    toast.error(error.message);
     throw error;
   }
 
-  // Default handler
-  toast.error(errorMessage || "Something went wrong");
-  throw new AppError(errorMessage || "Something went wrong", "UNKNOWN_ERROR", 500);
+  throw new AppError(errorMessage, getErrorCode(error), 500);
 };

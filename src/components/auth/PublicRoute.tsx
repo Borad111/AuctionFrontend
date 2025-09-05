@@ -19,7 +19,7 @@ export default function PublicRoute({ children }: { children: React.ReactNode })
 
   // ⚠️ Jab tak check ho raha hai, kuch mat dikhao
   if (user) {
-    return <div className="p-6 text-center text-gray-600">Redirecting...</div>;
+    return <div className="p-6 text-center text-gray-600"></div>;
   }
 
   return <>{children}</>;

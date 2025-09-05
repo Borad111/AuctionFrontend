@@ -11,10 +11,9 @@ import { useRegister } from "../hooks/useRegister";
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
-  onRegisterSuccess?: () => void;
 }
 
-export function RegisterForm({ onSwitchToLogin, onRegisterSuccess }: RegisterFormProps) {
+export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
   const { registerHandler, isLoading } = useRegister();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,7 +30,6 @@ export function RegisterForm({ onSwitchToLogin, onRegisterSuccess }: RegisterFor
     try {
       await registerHandler(data);
       reset();
-      onRegisterSuccess?.();
     } catch (error) {
       // Error is already handled in the hook
     }

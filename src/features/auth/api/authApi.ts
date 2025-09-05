@@ -8,26 +8,15 @@ import {
 } from "../types";
 import { baseQueryWithReauth } from "@/utils/api/baseQueryWithReauth";
 import { config } from "@/config";
-import { RootState } from "@/store/store";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-      baseQuery: fetchBaseQuery({
-    baseUrl: config.api.authApi,
-    credentials: "include",
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.accessToken;
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth, // ✅ centralized
   tagTypes: ["Auth"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (data) => ({
-        url: `${config.api.authApi}/register`,
+        url: `${config.api.auth}/register`,
         method: "POST",
         body: data,
       }),
@@ -35,7 +24,7 @@ export const authApi = createApi({
 
     loginUser: builder.mutation<LoginResponse, LoginRequest>({
       query: (data) => ({
-        url: `${config.api.authApi}/login`,
+        url: `${config.api.auth}/login`,
         method: "POST",
         body: data,
       }),
@@ -43,31 +32,31 @@ export const authApi = createApi({
     }),
     refreshToken: builder.mutation<{ accessToken: string }, void>({
       query: () => ({
-        url: `${config.api.authApi}/refresh-token`,
+        url: `${config.api.auth}/refresh-token`,
         method: "POST",
       }),
     }),
 
     getCurrentUser: builder.mutation<UserResponse, void>({
       query: () => ({
-        url: `${config.api.authApi}/me`,
+        url: `${config.api.auth}/me`,
         method: "GET",
       }),
     }),
     logoutUser: builder.mutation<void, void>({
       query: () => ({
-        url: `${config.api.authApi}/logout`,
+        url: `${config.api.auth}/logout`,
         method: "POST",
       }),
       invalidatesTags: ["Auth"],
     }),
   }),
-}); 
+});
 
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useGetCurrentUserMutation,
   useLogoutUserMutation,
-  useRefreshTokenMutation
+  useRefreshTokenMutation,
 } = authApi;
