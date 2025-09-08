@@ -22,7 +22,9 @@ export default function AboutUsPage() {
     logout(); // 🔄 Redux state clear
     router.replace("/"); // 🔄 redirect to login page
   };
-
+  const throwError = () => {
+    throw new Error("💥 Test error from Next.js!");
+  };
   
 
   return (
@@ -49,6 +51,10 @@ export default function AboutUsPage() {
       >
         {isLoading ? "Logging out..." : "Logout"}
       </button>
+
+        <button onClick={throwError} className="p-2 bg-red-500 text-white">
+      Throw Error
+    </button>
     </div>
     </ProtectedRoute>
   );

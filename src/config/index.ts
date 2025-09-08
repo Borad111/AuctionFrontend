@@ -1,4 +1,3 @@
-import { en } from "zod/locales";
 import { env } from "./env";
 
 export const config={

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { LoginResponse } from "../types";
 import { useAuth } from "./useAuth";
 import { useRouter } from "next/navigation";
-import { handleError } from "@/utils/error/errorHandler";
+import { addBreadcrumb, handleError } from "@/utils/error/errorHandler";
 import { routes } from "@/constants/routes";
 
 export const useLogin = () => {
@@ -14,8 +14,9 @@ export const useLogin = () => {
   const { setAuth } = useAuth();
   const router = useRouter();
 
-  const loginHandler = async (email: string, password: string): Promise<LoginResponse> => {
+  const loginHandler = async (email: string, password: string) => {
     try {
+      addBreadcrumb("User clicked login button", "auth");
       // 🔑 Firebase login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
@@ -31,8 +32,7 @@ export const useLogin = () => {
 
       return response;
     } catch (error) {
-      handleError(error);
-      throw new Error("Login failed");
+      handleError(error, { email, route: routes.aboutUs, endpoint: "loginUser" });
     }
   };
 
