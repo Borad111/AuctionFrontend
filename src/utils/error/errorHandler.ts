@@ -2,7 +2,7 @@
   import { AppError, AuthenticationError, ValidationError } from "./errors";
   import * as Sentry from "@sentry/nextjs";
 
-  // ✅ Map Firebase error codes to user-friendly messages
+
   const firebaseErrorMessages: Record<string, string> = {
     "auth/email-already-in-use": "This email is already registered. Please login instead.",
     "auth/invalid-email": "Invalid email format. Please enter a valid email.",
@@ -52,7 +52,6 @@
     if (error instanceof ValidationError) throw error;
     throw new AppError(errorMessage, getErrorCode(error), 500);
   };
-
 
   export const addBreadcrumb = (message: string, category: string = "action") => {
     Sentry.addBreadcrumb({

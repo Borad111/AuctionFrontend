@@ -11,9 +11,10 @@ const firebaseConfig = {
   messagingSenderId: "548067064353",
   appId: "1:548067064353:web:39a5eeed4ad204b42b8160",
   measurementId: "G-YN5NN72ZZ0",
-};
+};  
 
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 
 // ✅ Auth safe hai SSR me

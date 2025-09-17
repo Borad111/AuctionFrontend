@@ -4,7 +4,9 @@ import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
 import { Toaster } from "@/components/ui/sonner";
 import ClientLayout from "./ClientLayout";
-
+import NavigationClient from "@/components/common/header/NavigationClient";
+import FooterClient from "@/components/common/footer/FooterClient";
+import { ErrorBoundary } from "@/components/errorBoundary/ErrorBoundary";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,9 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReduxProvider>
-          <ClientLayout>
+          {/* <ClientLayout> */}
+            <NavigationClient/>
+            {/* <ErrorBoundary> */}
             {children}
-          </ClientLayout>
+            {/* </ErrorBoundary> */}
+            <FooterClient/>
+          {/* </ClientLayout> */}
           <Toaster/>
         </ReduxProvider>
       </body>

@@ -40,7 +40,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }   
         }
       } catch (refreshErr) {
-        console.error("❌ Refresh token failed:", refreshErr);
         logout();
         Sentry.setUser(null);
         toast.error("Session expired. Please login again.");

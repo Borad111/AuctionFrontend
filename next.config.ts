@@ -1,8 +1,16 @@
 import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",   // <- ye wildcard sabhi domains allow karega
+      },
+    ],
+  },
 };
 
 export default withSentryConfig(nextConfig, {
