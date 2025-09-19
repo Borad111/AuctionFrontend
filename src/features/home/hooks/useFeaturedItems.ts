@@ -15,7 +15,7 @@ import { useMemo } from "react"; // ✅ Add useMemo for optimization
     const { data, error, isLoading, isFetching } = useGetAllAuctionsQuery(undefined, {
         refetchOnFocus: true,  
     }
-    );
+    );    
 
   // ✅ useMemo for expensive calculations
   const featuredAuctions = useMemo(() => {

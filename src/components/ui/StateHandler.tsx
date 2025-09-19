@@ -15,7 +15,7 @@ export function StateHandler({ loading, error, loadingFallback, children }: Stat
     return (
       <section className="py-16">
         <div className="container px-4 mx-auto">
-          <div className="text-center text-red-500">Error: {error}</div>
+          <div className="text-center text-red-500"> {error}</div>
         </div>
       </section>
     );

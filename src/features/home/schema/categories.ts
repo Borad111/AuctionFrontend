@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const CategorySchema = z.object({
   id: z.string(),
-  name: z.number(),
+  name: z.string(),
   icon: z.string().nullable(),
   auctionCount: z.string(), // string aayega, number mein transform karna hoga
 });

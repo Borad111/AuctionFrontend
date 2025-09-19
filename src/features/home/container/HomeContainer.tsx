@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import dynamic from "next/dynamic";
 import HeroSkeleton from "../components/ui/HeroSkeleton";
 import TrustSkeleton from "../components/ui/TrustSkeleton";
@@ -7,20 +7,20 @@ import CategoriesSkeleton from "../components/ui/CategoriesSkeleton";
 import CTASkeleton from "../components/ui/CTASkeleton";
 import { useFeaturedAuctions } from "../hooks/useFeaturedItems";
 import { useCategories } from "../hooks/useCategories";
+import { SectionBoundary } from "@/components/errorBoundary/SectionBoundary";
+import { Suspense } from "react";
 
-  const Hero=dynamic(
-    ()=>
-      import("@/features/home/components/home/Hero").then(
-        (mod) => mod.Hero
-      ),
-      {
-        loading : () => <HeroSkeleton/>,
-        ssr:false
-      }
-  );
+const Hero = dynamic(
+  () => import("@/features/home/components/home/Hero").then((mod) => mod.Hero),
+  {
+    loading: () => <HeroSkeleton />,
+    ssr: false,
+  }
+);
 
-  const Trust = dynamic(
-  () => import("@/features/home/components/home/Trust").then((mod) => mod.default),
+const Trust = dynamic(
+  () =>
+    import("@/features/home/components/home/Trust").then((mod) => mod.default),
   {
     loading: () => <TrustSkeleton />,
     ssr: false,
@@ -49,27 +49,51 @@ const Categories = dynamic(
 );
 const CTA = dynamic(
   () =>
-    import("@/features/home/components/home/CTA").then(
-      (mod) => mod.default
-    ),
+    import("@/features/home/components/home/CTA").then((mod) => mod.default),
   {
     loading: () => <CTASkeleton />,
     ssr: false,
   }
 );
-export default function HomeContainer() { 
-  
-
-  const { featuredAuctions, loading:auctionLoading, error:auctionError } = useFeaturedAuctions();
-  const { categories,loading:categoriesLoading,error:categoriesError}=useCategories();
+export default function HomeContainer() {
+  const {
+    featuredAuctions,
+    loading: auctionLoading,
+    error: auctionError,
+  } = useFeaturedAuctions();
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
   return (
     <div className="min-h-screen bg-gray-50">
       <main>
-        <Hero/>
-        <Trust/>
-        <FeaturedAuctions auctions={featuredAuctions} loading={auctionLoading} error={auctionError} />
-        <Categories categories={categories} loading={categoriesLoading} error={categoriesError}/>
-        <CTA/>
+        <Suspense fallback={<HeroSkeleton />}>
+          <Hero />
+        </Suspense>
+        <Suspense fallback={<TrustSkeleton />}>
+          <Trust />
+        </Suspense>
+        <Suspense fallback={<FeaturedAuctionsSkeleton />}>
+          <FeaturedAuctions
+            auctions={featuredAuctions}
+            loading={auctionLoading}
+            error={auctionError}
+          />
+        </Suspense>
+          <SectionBoundary message="Unable to load categories">
+            <Suspense fallback={<CategoriesSkeleton />}>
+              <Categories
+                categories={categories}
+                loading={categoriesLoading}
+                error={categoriesError}
+              />
+            </Suspense>
+          </SectionBoundary>
+        <Suspense fallback={<CTASkeleton />}>
+          <CTA />
+        </Suspense>
       </main>
     </div>
   );

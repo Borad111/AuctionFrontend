@@ -1,8 +1,8 @@
 export interface AuctionImage {
   id: string;
   imageUrl: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Auction {
@@ -16,8 +16,8 @@ export interface Auction {
   endTime: string;
   sellerId: string;
   categoryId?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedA?: string;
   images: AuctionImage[]; 
   category:AuctionCategory ;
 }

@@ -21,7 +21,7 @@ function Categories({ categories, loading, error }: CategoriesProps) {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
-            {categories.map((category) => (
+            {categories.map ((category) => (
               <CategoryCard
                 key={category.id}
                 id={category.id}
@@ -34,6 +34,7 @@ function Categories({ categories, loading, error }: CategoriesProps) {
         </div>
       </section>
        </StateHandler>
+       
 
   );
 }

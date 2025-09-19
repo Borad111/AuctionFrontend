@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/sonner";
 import ClientLayout from "./ClientLayout";
 import NavigationClient from "@/components/common/header/NavigationClient";
 import FooterClient from "@/components/common/footer/FooterClient";
-import { ErrorBoundary } from "@/components/errorBoundary/ErrorBoundary";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,16 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <ReduxProvider>
           {/* <ClientLayout> */}
-            <NavigationClient/>
-            {/* <ErrorBoundary> */}
-            {children}
-            {/* </ErrorBoundary> */}
-            <FooterClient/>
+          <NavigationClient />
+          {/* <ErrorBoundary> */}
+          {children}
+          {/* </ErrorBoundary> */}
+          <FooterClient />
           {/* </ClientLayout> */}
-          <Toaster/>
+          <Toaster />
         </ReduxProvider>
       </body>
     </html>
