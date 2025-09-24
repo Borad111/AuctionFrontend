@@ -5,7 +5,7 @@ export const CategorySchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   auctionCount: z.string(), // string aayega, number mein transform karna hoga
-});
+}).strict();
 
 export const CategoriesResponseSchema = z.object({
   success: z.boolean(),

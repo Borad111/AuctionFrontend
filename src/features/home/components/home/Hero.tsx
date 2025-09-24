@@ -11,7 +11,7 @@ export function Hero() {
           <h1 className="text-4xl lg:text-6xl font-bold text-balance mb-6">
             Bid Smarter, <span className="text-primary">Win Bigger!</span>
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
+          <p  className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
             Discover unique treasures, rare collectibles, and exclusive items in
             our premium online auction marketplace.
           </p>
