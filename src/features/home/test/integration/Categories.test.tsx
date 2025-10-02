@@ -15,7 +15,7 @@ jest.mock('../components/ui/CategoryCard', () => ({
   CategoryCard: ({ name, auctionCount }: { name: string; auctionCount: string }) => (
     <div data-testid="category-card">
       <h3>{name}</h3>
-      <p>{auctionCount} auctions</p>
+      <p>{auctionCount} auctiygons</p>
     </div>
   )
 }));
@@ -172,4 +172,4 @@ describe('Home Flow Integration Test', () => {
     expect(screen.getByTestId('error-state')).toHaveTextContent('Failed to load categories');
     expect(handleError).toHaveBeenCalledWith(apiError, { section: 'categories' }, false);
   });
-});
+}); 

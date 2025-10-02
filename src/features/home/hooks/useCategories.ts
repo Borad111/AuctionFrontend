@@ -5,8 +5,10 @@ import { handleError, mapApiErrorToMessage } from "@/utils/error/errorHandler";
 import { homeApi, useGetCategoriesQuery } from "../api/homeApi";
 import { UseCategoriesReturn } from "../types";
 
-export const useCategories = (): UseCategoriesReturn => {
-  const { data, error, isLoading, isFetching } = homeApi.useGetCategoriesQuery();
+export const useCategories = (initialData?:any[]): UseCategoriesReturn => {
+  const { data, error, isLoading, isFetching } = homeApi.useGetCategoriesQuery(undefined,{
+    skip:!!initialData,
+  });
   const categories = data?.categories || [];
 
   let errorMessage: string | null = null;

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 export function AuctionHeader({ title, condition, status, watchers }: {
   title: string
   condition: string
-  status: "active" | "ended"
+  status: "ACTIVE" | "ENDED" | "CANCELLED"
   watchers: number
 }) {
   const [isWatching, setIsWatching] = useState(false)
@@ -36,8 +36,8 @@ export function AuctionHeader({ title, condition, status, watchers }: {
           <span>{watchers} watching</span>
         </div>
         <Badge variant="secondary">{condition}</Badge>
-        <Badge variant={status === "active" ? "default" : "secondary"}>
-          {status === "active" ? "Active" : "Ended"}
+        <Badge variant={status === "ACTIVE" ? "default" : "secondary"}>
+          {status === "ACTIVE" ? "Active" : "Ended"}
         </Badge>
       </div>
     </div>

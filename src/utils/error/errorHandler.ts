@@ -36,13 +36,14 @@ export const mapApiErrorToMessage = (error: unknown): string => {
       if (status === "PARSING_ERROR") {
         return "Invalid data received.";
       }
+      if (anyErr?.data?.message) return String(anyErr.data.message);
+
       if (typeof status === "number") {
         if (status === 404) return "Requested resource not found.";
         if (status >= 500) return "Server error. Please try again later.";
         if (status === 401 || status === 403) return "Authentication failed. Please login.";
       }
       // fallback to server provided message
-      if (anyErr?.data?.message) return String(anyErr.data.message);
       if (typeof anyErr.error === "string") return anyErr.error;
     }
 

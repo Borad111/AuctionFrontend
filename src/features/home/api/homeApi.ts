@@ -14,6 +14,9 @@ export const homeApi = createApi({
   baseQuery: simpleBaseQuery,
 
   tagTypes: ["Auctions", "Categories", "Users"],
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  keepUnusedDataFor: 300, // 5 minutes
   endpoints: (builder) => ({
     getAllAuctions: builder.query<FeaturedResponse, void>({
       query: () => ({
@@ -31,17 +34,18 @@ export const homeApi = createApi({
       providesTags: ["Auctions"],
     }),
 
-    getCategories: builder.query<CategoriesResponse, void>({
-      query: () => ({
-        url: `${config.api.auction}/categories`,
-        method: "GET",
+      getCategories: builder.query<CategoriesResponse, void>({
+        query: () => ({
+          url: `${config.api.auction}/categories`,
+          method: "GET",
+        }),
+        transformResponse: (response: unknown): CategoriesResponse => {
+          return CategoriesResponseSchema.parse(response);
+        },
+        transformErrorResponse: handleTransformError,
+        providesTags: ["Categories"],
+        keepUnusedDataFor: 600, // 10 minutes
       }),
-      transformResponse: (response: unknown): CategoriesResponse => {
-        return CategoriesResponseSchema.parse(response);
-      },
-      transformErrorResponse: handleTransformError,
-      providesTags: ["Categories"],
-    }),
   }),
 });
 

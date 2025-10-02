@@ -8,6 +8,8 @@ import Image from "next/image";
 import {  AuctionCardProps } from "@/features/home/types";
 import { calculateTimeLeft, formatCurrency } from "@/utils/utils";
 import { getStatusInfo } from "@/utils/auction";
+import Link from "next/link";
+import { routes } from "@/constants/routes";
 
 export function AuctionCard({ auction }: AuctionCardProps) {
 
@@ -21,7 +23,8 @@ export function AuctionCard({ auction }: AuctionCardProps) {
 
   const categoryName = auction.category?.name || "Uncategorized";
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden rounded-lg p-0 border-0">
+    <Card  className="group hover:shadow-lg transition-all duration-300 overflow-hidden rounded-lg p-0 border-0">
+     <Link href={`${routes.auction}/${auction.id}`}>
       <div className="relative h-96 w-full overflow-hidden rounded-lg">
         <Image
           src={imageUrl}
@@ -33,6 +36,7 @@ export function AuctionCard({ auction }: AuctionCardProps) {
           {statusInfo.text}
         </Badge>
       </div>
+      </Link>
 
       <CardContent className="p-4">
         <div className="space-y-2">

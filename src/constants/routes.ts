@@ -6,4 +6,5 @@ export const routes = {
   dashboard: "/dashboard",
   profile: "/profile",
   aboutUs: "/about-us", 
+  auction: "/auction",
 };

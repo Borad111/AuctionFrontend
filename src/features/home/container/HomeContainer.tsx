@@ -14,7 +14,7 @@ const Hero = dynamic(
   () => import("@/features/home/components/home/Hero").then((mod) => mod.Hero),
   {
     loading: () => <HeroSkeleton />,
-    ssr: false,
+    ssr: true,
   }
 );
 
@@ -23,7 +23,7 @@ const Trust = dynamic(
     import("@/features/home/components/home/Trust").then((mod) => mod.default),
   {
     loading: () => <TrustSkeleton />,
-    ssr: false,
+    ssr: true,
   }
 );
 
@@ -44,7 +44,7 @@ const Categories = dynamic(
     ),
   {
     loading: () => <CategoriesSkeleton />,
-    ssr: false,
+    ssr: true,
   }
 );
 const CTA = dynamic(
@@ -52,10 +52,10 @@ const CTA = dynamic(
     import("@/features/home/components/home/CTA").then((mod) => mod.default),
   {
     loading: () => <CTASkeleton />,
-    ssr: false,
+    ssr: true,
   }
 );
-export default function HomeContainer() {
+export default function HomeContainer({initialCategories}:{initialCategories:any[]}) {
   const {
     featuredAuctions,
     loading: auctionLoading,
@@ -65,35 +65,25 @@ export default function HomeContainer() {
     categories,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useCategories();
+  } = useCategories(initialCategories);
   return (
     <div className="min-h-screen bg-gray-50">
       <main>
-        <Suspense fallback={<HeroSkeleton />}>
           <Hero />
-        </Suspense>
-        <Suspense fallback={<TrustSkeleton />}>
           <Trust />
-        </Suspense>
-        <Suspense fallback={<FeaturedAuctionsSkeleton />}>
           <FeaturedAuctions
             auctions={featuredAuctions}
             loading={auctionLoading}
             error={auctionError}
           />
-        </Suspense>
           <SectionBoundary message="Unable to load categories">
-            <Suspense fallback={<CategoriesSkeleton />}>
               <Categories
                 categories={categories}
                 loading={categoriesLoading}
                 error={categoriesError}
               />
-            </Suspense>
           </SectionBoundary>
-        <Suspense fallback={<CTASkeleton />}>
           <CTA />
-        </Suspense>
       </main>
     </div>
   );
